@@ -8,34 +8,43 @@
         <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
 </head>
 <body>
-    <div id="blend" style="position: relative; left: 20%; width: 60%;"></div>
+    <div id="blend" style="position: relative; margin-left: auto; margin-right: auto; width: 50%;"></div>
     <div style="position: relative; top: 20px; left: 10%; width: 80%;">
-        <div id="left" style="position: relative; left: 0px; float: left; text-align: center;"></div>
-        <div id="slider" style="position: relative;"></div>
-        <div id="right" style="position: relative; right: 0px; float: right; text-align: center;"></div>
+        <div id="slider" style="position: relative; width: 100%;"></div>
+        <div id="left" style="position: relative; top: 20px; float: left; text-align: left;"></div>
+        <div id="right" style="position: relative; top: 20px; float: right; text-align: right;"></div>
     </div>
 
     <script type="text/javascript">
+        function update(v) {
+            $("#top").attr("style", "position: absolute; left: 0px; top: 0px; opacity:" + v / 100 + ";filter:alpha(opacity=" + v + ");");
+        }
+
         $(document).ready(function() {
             $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?", { format: "json" }, function(data) {
-                    $("<img/>").attr("src", data.items[0].media.m).appendTo("#left");
-                    $("<a/>").attr("href", data.items[0].link).html(data.items[0].title).appendTo("#left");
+                    var litem = data.items[Math.floor(Math.random()*data.items.length)-1],
+                        ritem = data.items[Math.floor(Math.random()*data.items.length)-1];
+                    $("<img/>").attr("src", litem.media.m).appendTo("#left");
+                    $("<br/>").appendTo("#left");
+                    $("<a/>").attr("href", litem.link).html(litem.author + ": " + litem.title).appendTo("#left");
 
-                    $("<img/>").attr("src", data.items[1].media.m).appendTo("#right");
-                    $("<a/>").attr("href", data.items[1].link).html(data.items[1].title).appendTo("#right");
+                    $("<img/>").attr("src", ritem.media.m).appendTo("#right");
+                    $("<br/>").appendTo("#right");
+                    $("<a/>").attr("href", ritem.link).html(ritem.author + ": " + ritem.title).appendTo("#right");
 
 
-                    $("<img/>").attr("src", data.items[0].media.m.replace("_m.jpg", "_b.jpg")).appendTo("#blend");
+                    $("<img/>").attr("src", litem.media.m.replace("_m.jpg", "_b.jpg")).appendTo("#blend");
                     $("<img/>").attr("id", "top").attr("src",
-                        data.items[1].media.m.replace("_m.jpg",
-                        "_b.jpg")).attr("style", "position: absolute; left: 0px; top: 0px; opacity:0.5;filter:alpha(opacity=50);").appendTo("#blend");
+                        ritem.media.m.replace("_m.jpg", "_b.jpg")).attr("style", "position: absolute; left: 0px; top: 0px;").appendTo("#blend");
+                    $("#slider").slider("value", 20+Math.floor(Math.random()*60));
                 });
         });
 
         $(function() {
-            $("#slider").slider({ value: 50, slide: function(ev, ui) {
-                $("#top").attr("style", "position: absolute; left: 0px; top: 0px; opacity:" + ui.value / 100 + ";filter:alpha(opacity=" + ui.value + ");");
-            } });
+            $("#slider").slider({
+                slide: function(ev, ui) { update(ui.value); },
+                change: function(ev, ui) { update(ui.value); },
+            });
         });
     </script>
 </body>
