@@ -17,14 +17,14 @@
 
     <script type="text/javascript">
         function update(v) {
-            $("#top").css("opacity", v / 100);
-            $("#top").css("filter", "alpha(opacity=" + v);
+            //$("#top").css("opacity", v / 100);
+            $("#top").css("-webkit-mask-image", "-webkit-gradient(linear, left top, right top, color-stop(0.00, rgba(0,0,0,1)), color-stop(" + (v/100 - 0.03) + ", rgba(0,0,0,1)), color-stop(" + v/100 + ", rgba(0,0,0,0)), color-stop(" + (v/100 + 0.03) + ", rgba(0,0,0,0)), color-stop(1.00, rgba(0,0,0,0)))");
         }
 
         $(document).ready(function() {
             $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?", { format: "json" }, function(data) {
-                    var litem = data.items[Math.floor(Math.random()*(data.items.length)-1)],
-                        ritem = data.items[Math.floor(Math.random()*(data.items.length)-1)];
+                    var litem = data.items[Math.floor(Math.random()*(data.items.length-1))],
+                        ritem = data.items[Math.floor(Math.random()*(data.items.length-1))];
                     $("<img/>").attr("src", litem.media.m).appendTo("#left");
                     $("<br/>").appendTo("#left");
                     $("<a/>").attr("href", litem.link).html(litem.title).appendTo("#left");
@@ -35,7 +35,7 @@
 
 
                     $("<img/>").attr("src", litem.media.m.replace("_m.jpg", "_b.jpg")).appendTo("#blend");
-                    $("<div/>").attr("id", "top").attr("style", "position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; background-repeat: no-repeat; background-image: url(" + ritem.media.m.replace('_m.jpg', '_b.jpg') + ");").appendTo("#blend");
+                    $("<div/>").attr("id", "top").attr("style", "position: absolute; left: 0px; top: 0px; width: 200%; height: 100%; background: url(" + ritem.media.m.replace('_m.jpg', '_b.jpg') + ") 0 0 no-repeat;").appendTo("#blend");
                     $("#slider").slider("value", 20+Math.floor(Math.random()*60));
                 });
         });
