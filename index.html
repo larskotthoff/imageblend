@@ -17,25 +17,25 @@
 
     <script type="text/javascript">
         function update(v) {
-            $("#top").attr("style", "position: absolute; left: 0px; top: 0px; opacity:" + v / 100 + ";filter:alpha(opacity=" + v + ");");
+            $("#top").css("opacity", v / 100);
+            $("#top").css("filter", "alpha(opacity=" + v);
         }
 
         $(document).ready(function() {
             $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?", { format: "json" }, function(data) {
-                    var litem = data.items[Math.floor(Math.random()*data.items.length)-1],
-                        ritem = data.items[Math.floor(Math.random()*data.items.length)-1];
+                    var litem = data.items[Math.floor(Math.random()*(data.items.length)-1)],
+                        ritem = data.items[Math.floor(Math.random()*(data.items.length)-1)];
                     $("<img/>").attr("src", litem.media.m).appendTo("#left");
                     $("<br/>").appendTo("#left");
-                    $("<a/>").attr("href", litem.link).html(litem.author + ": " + litem.title).appendTo("#left");
+                    $("<a/>").attr("href", litem.link).html(litem.title).appendTo("#left");
 
                     $("<img/>").attr("src", ritem.media.m).appendTo("#right");
                     $("<br/>").appendTo("#right");
-                    $("<a/>").attr("href", ritem.link).html(ritem.author + ": " + ritem.title).appendTo("#right");
+                    $("<a/>").attr("href", ritem.link).html(ritem.title).appendTo("#right");
 
 
                     $("<img/>").attr("src", litem.media.m.replace("_m.jpg", "_b.jpg")).appendTo("#blend");
-                    $("<img/>").attr("id", "top").attr("src",
-                        ritem.media.m.replace("_m.jpg", "_b.jpg")).attr("style", "position: absolute; left: 0px; top: 0px;").appendTo("#blend");
+                    $("<div/>").attr("id", "top").attr("style", "position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; background-repeat: no-repeat; background-image: url(" + ritem.media.m.replace('_m.jpg', '_b.jpg') + ");").appendTo("#blend");
                     $("#slider").slider("value", 20+Math.floor(Math.random()*60));
                 });
         });
