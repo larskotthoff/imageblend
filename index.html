@@ -9,16 +9,27 @@
 </head>
 <body>
     <div id="blend" style="position: relative; margin-left: auto; margin-right: auto; width: 50%;"></div>
+    <div id="slider" style="position: relative; margin-left: auto; margin-right: auto; top: 10px; width: 50%;"></div>
     <div style="position: relative; top: 20px; left: 10%; width: 80%;">
-        <div id="slider" style="position: relative; width: 100%;"></div>
         <div id="left" style="position: relative; top: 20px; float: left; text-align: left;"></div>
+        <div style="position: relative; text-align: center; width: 50%; margin-left: auto; margin-right: auto;">
+            <input type="radio" onclick="which=0;update();" name="trans" checked="true">Opacity<br>
+            <input type="radio" onclick="which=1;update();" name="trans">Position
+        </div>
         <div id="right" style="position: relative; top: 20px; float: right; text-align: right;"></div>
     </div>
 
     <script type="text/javascript">
-        function update(v) {
-            //$("#top").css("opacity", v / 100);
-            $("#top").css("-webkit-mask-image", "-webkit-gradient(linear, left top, right top, color-stop(0.00, rgba(0,0,0,1)), color-stop(" + (v/100 - 0.03) + ", rgba(0,0,0,1)), color-stop(" + v/100 + ", rgba(0,0,0,0)), color-stop(" + (v/100 + 0.03) + ", rgba(0,0,0,0)), color-stop(1.00, rgba(0,0,0,0)))");
+        var which = 0;
+        function update() {
+            var v = $("#slider").slider("value");
+            if(which == 0) {
+                $("#top").css("-webkit-mask-image", "");
+                $("#top").css("opacity", v / 100);
+            } else {
+                $("#top").css("opacity", "");
+                $("#top").css("-webkit-mask-image", "-webkit-gradient(linear, left top, right top, color-stop(0.00, rgba(0,0,0,1)), color-stop(" + (v/100 - 0.03) + ", rgba(0,0,0,1)), color-stop(" + v/100 + ", rgba(0,0,0,0)), color-stop(" + (v/100 + 0.03) + ", rgba(0,0,0,0)), color-stop(1.00, rgba(0,0,0,0)))");
+            }
         }
 
         $(document).ready(function() {
@@ -35,15 +46,15 @@
 
 
                     $("<img/>").attr("src", litem.media.m.replace("_m.jpg", "_b.jpg")).appendTo("#blend");
-                    $("<div/>").attr("id", "top").attr("style", "position: absolute; left: 0px; top: 0px; width: 200%; height: 100%; background: url(" + ritem.media.m.replace('_m.jpg', '_b.jpg') + ") 0 0 no-repeat;").appendTo("#blend");
+                    $("<div/>").attr("id", "top").attr("style", "position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; background: url(" + ritem.media.m.replace('_m.jpg', '_b.jpg') + ") 0 0 no-repeat;").appendTo("#blend");
                     $("#slider").slider("value", 20+Math.floor(Math.random()*60));
                 });
         });
 
         $(function() {
             $("#slider").slider({
-                slide: function(ev, ui) { update(ui.value); },
-                change: function(ev, ui) { update(ui.value); },
+                slide: function(ev, ui) { update(); },
+                change: function(ev, ui) { update(); },
             });
         });
     </script>
